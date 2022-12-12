@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,15 +12,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String numero = 'Número';
+  String numero = '';
+  double primeiroNumero = 0.0;
+  String operacao = "";
 
   void calcular(String tecla) {
     switch (tecla) {
-      case 'AC':
-        setState(() {
-          numero = '0';
-        });
-        break;
+      case '0':
       case '1':
       case '2':
       case '3':
@@ -31,8 +28,41 @@ class _MyAppState extends State<MyApp> {
       case '7':
       case '8':
       case '9':
+      case ',':
         setState(() {
           numero += tecla;
+          numero = numero.replaceAll(',', '.');
+          if (numero.contains('.')) {
+            // double numeroDouble = double.parse(numero);
+            // numero = numeroDouble.toString();
+          } else {
+            int numeroInt = int.parse(numero);
+            numero = numeroInt.toString();
+          }
+          numero = numero.replaceAll('.', ',');
+        });
+        break;
+
+      case '+':
+        operacao = tecla;
+        primeiroNumero = double.parse(numero);
+        numero = "0";
+        break;
+
+      case '=':
+        double resultado = 0.0;
+        if (operacao == '+') {
+          resultado = primeiroNumero + double.parse(numero);
+          setState(() {
+            numero = resultado.toString();
+            numero = numero.replaceAll('.', ',');
+          });
+        }
+        break;
+
+      case 'AC':
+        setState(() {
+          numero = '0';
         });
         break;
 
@@ -88,7 +118,9 @@ class _MyAppState extends State<MyApp> {
                 GestureDetector(
                     onTap: () => calcular('9'),
                     child: const Text('9', style: TextStyle(fontSize: 48))),
-                const Text('/', style: TextStyle(fontSize: 48)),
+                GestureDetector(
+                    onTap: () => calcular('/'),
+                    child: const Text('/', style: TextStyle(fontSize: 48))),
               ],
             ),
             Row(
@@ -103,7 +135,11 @@ class _MyAppState extends State<MyApp> {
                 GestureDetector(
                     onTap: () => calcular('6'),
                     child: const Text('6', style: TextStyle(fontSize: 48))),
-                const Text('X', style: TextStyle(fontSize: 48)),
+                GestureDetector(
+                    onTap: () {
+                      calcular("*");
+                    },
+                    child: const Text('X', style: TextStyle(fontSize: 48))),
               ],
             ),
             Row(
@@ -118,7 +154,9 @@ class _MyAppState extends State<MyApp> {
                 GestureDetector(
                     onTap: () => calcular('3'),
                     child: const Text('3', style: TextStyle(fontSize: 48))),
-                const Text('-', style: TextStyle(fontSize: 48)),
+                GestureDetector(
+                    onTap: () => calcular('-'),
+                    child: const Text('-', style: TextStyle(fontSize: 48))),
               ],
             ),
             Row(
@@ -127,9 +165,17 @@ class _MyAppState extends State<MyApp> {
                 GestureDetector(
                     onTap: () => calcular('0'),
                     child: const Text('0', style: TextStyle(fontSize: 48))),
-                const Text(',', style: TextStyle(fontSize: 48)),
-                const Text('=', style: TextStyle(fontSize: 48)),
-                const Text('+', style: TextStyle(fontSize: 48)),
+                GestureDetector(
+                    onTap: () => calcular(','),
+                    child: const Text(',', style: TextStyle(fontSize: 48))),
+                GestureDetector(
+                    child: GestureDetector(
+                        onTap: () => calcular('='),
+                        child:
+                            const Text('=', style: TextStyle(fontSize: 48)))),
+                GestureDetector(
+                    onTap: () => calcular('+'),
+                    child: const Text('+', style: TextStyle(fontSize: 48))),
               ],
             ),
             const Text('Coluna 6')
