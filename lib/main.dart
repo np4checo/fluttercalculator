@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
         break;
 
       case '+':
-        operacao = tecla;
+        operacao = '+';
         primeiroNumero = double.parse(numero);
         numero = "0";
         break;
